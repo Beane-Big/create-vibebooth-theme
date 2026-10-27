@@ -1,8 +1,9 @@
 #!/usr/bin/env node
-// Vibebooth 主题命令：打包、装到本机平台。
+// Vibebooth 主题命令：截预览图、打包、装到本机平台。
 //
-//   node scripts/theme.mjs pack      构建并生成 dist/<id>-<版本>.zip，上传到平台“设置 → 主题”页
-//   node scripts/theme.mjs install   打包并装到本机平台（要 Docker 和本机平台）
+//   node scripts/theme.mjs screenshot  打开预览页截一张图存成 preview.png，作为主题应用里的截图（要本机装着 Chrome 或 Edge）
+//   node scripts/theme.mjs pack        先截预览图，再构建并生成 dist/<id>-<版本>.zip，上传到平台的“主题”应用
+//   node scripts/theme.mjs install     打包并装到本机平台（要 Docker 和本机平台）
 //
 // 主题包的规则由平台安装器在安装时检查，这里只按规范把文件放好。
 import { spawnSync } from "node:child_process";
@@ -51,9 +52,51 @@ function files(dir, prefix = "") {
   });
 }
 
-function pack() {
-  const { text, id, version, preview } = manifest();
+// screenshot 用 Vite 起预览页，用本机的 Chrome（没有时用 Edge）以 1280×800 的浅色截一张图，存成 preview.png 并写进 theme.yaml。
+// 打包时也会先截一次（required 为 false）：找不到浏览器时只提示，沿用现有的截图。
+async function screenshot(required = true) {
+  const { text } = manifest();
   if (!existsSync(join(root, "node_modules"))) run("npm", ["install", "--no-audit", "--no-fund"]);
+  const { createServer } = await import("vite");
+  // Vite 的开发服务器会把 NODE_ENV 设成 development，打包时接着运行的构建会继承它，打出开发版的 React 代码；截完图要还原。
+  const nodeEnv = process.env.NODE_ENV;
+  const { chromium } = await import("playwright-core");
+  const server = await createServer({ root, logLevel: "error", server: { port: 0 } });
+  await server.listen();
+  let browser;
+  try {
+    // 最后试 Playwright 自己下载的浏览器（装过 Playwright 的电脑上有）。
+    for (const options of [{ channel: "chrome" }, { channel: "msedge" }, {}]) {
+      browser = await chromium.launch(options).catch(() => null);
+      if (browser) break;
+    }
+    if (!browser) {
+      const hint = "没有找到 Chrome 或 Edge，装一个再运行；也可以自己截一张图存成 preview.png，写进 theme.yaml 的 preview";
+      if (required) die(hint);
+      console.log(`提示：${hint}。这次沿用现有的截图`);
+      return;
+    }
+    const page = await browser.newPage({ viewport: { width: 1280, height: 800 }, colorScheme: "light" });
+    await page.goto(server.resolvedUrls.local[0]);
+    await page.waitForLoadState("networkidle");
+    await page.waitForTimeout(500);
+    await page.screenshot({ path: join(root, "preview.png") });
+  } finally {
+    await browser?.close();
+    await server.close();
+    if (nodeEnv === undefined) delete process.env.NODE_ENV;
+    else process.env.NODE_ENV = nodeEnv;
+  }
+  const yaml = /^preview:/m.test(text) ? text.replace(/^preview:.*$/m, "preview: preview.png     # 主题应用里的截图，npm run pack 时自动截") : text.trimEnd() + "\npreview: preview.png\n";
+  writeFileSync(join(root, "theme.yaml"), yaml);
+  console.log("已生成 preview.png，写进了 theme.yaml");
+}
+
+async function pack() {
+  if (!existsSync(join(root, "node_modules"))) run("npm", ["install", "--no-audit", "--no-fund"]);
+  console.log("截预览图…");
+  await screenshot(false);
+  const { text, id, version, preview } = manifest();
   console.log(`构建主题 ${id} ${version}…`);
   run("npm", ["run", "build"]);
   const list = files(built);
@@ -71,15 +114,16 @@ function pack() {
   if (preview) {
     if (!existsSync(join(root, preview))) die(`theme.yaml 里写了预览图 ${preview}，但文件不存在`);
     entries.push({ name: preview, data: readFileSync(join(root, preview)) });
+    if (preview.endsWith(".svg")) console.log("提示：截图还是示意图，装好 Chrome 或 Edge 后再打包会换成真实的截图");
   }
   const out = `dist/${id}-${version}.zip`;
   writeFileSync(join(root, out), zip(entries));
-  console.log(`已生成 ${out}（${entries.length} 个文件），上传到平台“设置 → 主题”页安装`);
+  console.log(`已生成 ${out}（${entries.length} 个文件），上传到平台的“主题”应用安装`);
   return out;
 }
 
-function install() {
-  const out = pack();
+async function install() {
+  const out = await pack();
   const container = output("docker", ["ps", "-q", "--filter", `label=com.docker.compose.project=${platformProject}`,
     "--filter", "label=com.docker.compose.service=installer"]);
   if (!container) die("本机平台没有在运行，请先在平台仓库里运行 docker compose up -d");
@@ -137,7 +181,7 @@ function crc32(buf) {
   return (c ^ 0xffffffff) >>> 0;
 }
 
-const commands = { pack, install };
+const commands = { screenshot, pack, install };
 const cmd = commands[process.argv[2]];
-if (!cmd) die("用法: node scripts/theme.mjs pack | install");
-cmd();
+if (!cmd) die("用法: node scripts/theme.mjs screenshot | pack | install");
+await cmd();

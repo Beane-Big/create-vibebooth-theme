@@ -55,7 +55,7 @@ async function main() {
 完成。接下来：
   cd vibebooth-theme-${id}
   npm run dev             本机预览，可切换深浅色
-  npm run pack            生成主题包，上传到平台的“设置 → 主题”页
+  npm run pack            截预览图并生成主题包，上传到平台的“主题”应用
   npm run install:local   装到本机平台，然后打开 http://localhost:8080（要 Docker 和本机平台）
 
 开发规范见 AGENTS.md；用 AI 编码工具时，让它先读这个文件。`);

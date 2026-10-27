@@ -4,7 +4,7 @@ import "../theme";
 import "./portal.css";
 import { StrictMode, useEffect, useState, type MouseEvent } from "react";
 import { createRoot } from "react-dom/client";
-import { Alert, Button, Card, Checkbox, ConfigProvider, Flex, Form, Input, Segmented, Select, Space, Tag, Typography, theme } from "antd";
+import { Alert, App as AntApp, Button, Card, Checkbox, ConfigProvider, Flex, Form, Input, Segmented, Select, Space, Tag, Typography, theme } from "antd";
 import { HomeOutlined, SettingOutlined, TeamOutlined } from "@ant-design/icons";
 import zhCN from "antd/locale/zh_CN";
 import type { ThemeApp, ThemeDefinition } from "../vibebooth";
@@ -32,29 +32,32 @@ function Preview() {
   return (
     <ConfigProvider locale={zhCN} theme={themeConfig(dark, def)} button={{ autoInsertSpace: false }}>
       <CssVars dark={dark} />
-      <div className="ant-layout skin-theme theme-__ID__" style={{ minHeight: "100vh" }}>
-        <header className="topbar">
-          <span className="brand">Vibebooth</span>
-          <span className="app-tabbar">
-            <span className="preview-tab active">
-              <HomeOutlined />
+      {/* 和门户一样包一层 App：正文字体、链接颜色都由它设置。 */}
+      <AntApp>
+        <div className="ant-layout skin-theme theme-__ID__" style={{ minHeight: "100vh" }}>
+          <header className="topbar">
+            <span className="brand">Vibebooth</span>
+            <span className="app-tabbar">
+              <span className="preview-tab active">
+                <HomeOutlined />
+              </span>
+              <span className="preview-tab">家庭积分</span>
             </span>
-            <span className="preview-tab">家庭积分</span>
-          </span>
-          <Segmented
-            value={dark ? "dark" : "light"}
-            onChange={(v) => setDark(v === "dark")}
-            options={[
-              { value: "light", label: "浅色" },
-              { value: "dark", label: "深色" },
-            ]}
-          />
-        </header>
-        <div className="content">
-          {def.Home ? <def.Home apps={demoApps} dark={dark} user={{ displayName: "演示用户" }} /> : <Alert type="info" showIcon message="这个主题没有替换首页，门户里会显示经典皮肤的应用卡片。" />}
-          <Components />
+            <Segmented
+              value={dark ? "dark" : "light"}
+              onChange={(v) => setDark(v === "dark")}
+              options={[
+                { value: "light", label: "浅色" },
+                { value: "dark", label: "深色" },
+              ]}
+            />
+          </header>
+          <div className="content">
+            {def.Home ? <def.Home apps={demoApps} dark={dark} user={{ displayName: "演示用户" }} /> : <Alert type="info" showIcon message="这个主题没有替换首页，门户里会显示经典皮肤的应用卡片。" />}
+            <Components />
+          </div>
         </div>
-      </div>
+      </AntApp>
     </ConfigProvider>
   );
 }

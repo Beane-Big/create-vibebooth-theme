@@ -4,5 +4,5 @@ id: __ID__
 name: "__NAME__"
 description: "__DESCRIPTION__"
 version: 0.1.0           # 发布新版本前改大
-preview: preview.svg     # 主题管理页里的预览图
+preview: preview.svg     # 主题应用里的截图，npm run pack 时换成真实截图
 # script 和 style 不用写，npm run pack 按构建出的文件补上

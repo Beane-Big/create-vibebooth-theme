@@ -16,21 +16,22 @@ npx github:Beane-Big/create-vibebooth-theme aurora
 
 | 命令 | 做什么 |
 | --- | --- |
+| `npm run screenshot` | 只截图：截一张预览页的图存成 `preview.png`，主题应用里显示它（要本机装着 Chrome 或 Edge） |
 | `npm run dev` | 本机预览：模拟门户的顶栏、首页和常见组件，可切换深浅色，不需要本机有平台 |
-| `npm run pack` | 构建并生成主题包 zip，上传到平台的“设置 → 主题”页 |
+| `npm run pack` | 先截图，再构建并生成主题包 zip，上传到平台的“主题”应用；没有 Chrome 或 Edge 时沿用现有的截图 |
 | `npm run install:local` | 打包并装到本机平台（要 Docker 和本机平台） |
 
 ## 生成了什么
 
 | 文件 | 内容 |
 | --- | --- |
-| `theme.yaml` | 主题清单：id、名称、版本、预览图 |
+| `theme.yaml` | 主题清单：id、名称、版本、截图 |
 | `src/theme.tsx` | 主题本身：颜色参数、Ant Design 参数、背景、玻璃效果、首页组件 |
 | `src/theme.css` | 主题的样式表，只在选用这个主题时加载 |
 | `src/platform.ts` | 和门户打交道的地方：共享的 Ant Design 组件、`asset()`、`registerTheme()` |
 | `src/vibebooth.d.ts` | 门户给主题的接口 |
 | `src/preview/` | `npm run dev` 用的预览页，模仿门户，不会打进主题包 |
-| `scripts/theme.mjs` | `pack` 和 `install:local` 的实现 |
+| `scripts/theme.mjs` | `screenshot`、`pack` 和 `install:local` 的实现 |
 | `AGENTS.md` | 给 AI 编码工具看的约定：主题能改什么、不能改什么 |
 
 ## 开发脚手架本身

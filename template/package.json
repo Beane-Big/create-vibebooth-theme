@@ -6,6 +6,7 @@
   "description": "__DESCRIPTION__",
   "scripts": {
     "dev": "vite",
+    "screenshot": "node scripts/theme.mjs screenshot",
     "build": "tsc -b && vite build",
     "pack": "node scripts/theme.mjs pack",
     "install:local": "node scripts/theme.mjs install"
@@ -16,6 +17,7 @@
     "@types/react-dom": "^19.3.0",
     "@vitejs/plugin-react": "^6.1.2",
     "antd": "^5.29.3",
+    "playwright-core": "^1.58.0",
     "react": "^19.3.1",
     "react-dom": "^19.3.1",
     "typescript": "^5.9.3",

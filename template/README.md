@@ -8,11 +8,12 @@ Vibebooth 门户的主题。主题能换门户的颜色、背景、表单和卡�
 
 ```bash
 npm run dev             # 本机预览：示例首页和常见组件，可切换深浅色
-npm run pack            # 构建并生成 dist/__ID__-<版本>.zip
+npm run screenshot      # 只截图：截一张预览页的图存成 preview.png（要本机装着 Chrome 或 Edge）
+npm run pack            # 先截图，再构建并生成 dist/__ID__-<版本>.zip
 npm run install:local   # 打包并装到本机平台（要 Docker 和本机平台）
 ```
 
-`npm run pack` 生成的 zip 上传到平台的“设置 → 主题”页安装。主题带脚本，安装时要管理员确认。装好后每个人都能在头像菜单的“皮肤”里选用。
+`npm run pack` 会先截一张预览页的图（`preview.png`），平台的“主题”应用里每个主题都显示它的截图；本机没有 Chrome 或 Edge 时沿用现有的截图。生成的 zip 上传到“主题”应用安装，要有“应用管理”权限；主题带脚本，安装时要确认。装好后每个人都能在“主题”应用里选用。
 
 ## 文件
 
@@ -25,5 +26,5 @@ npm run install:local   # 打包并装到本机平台（要 Docker 和本机平�
 | `src/vibebooth.d.ts` | 门户给主题的接口，不要改 |
 | `src/preview/` | `npm run dev` 用的预览页，模仿门户，不会打进主题包 |
 | `public/assets/` | 图片、字体，打包后在主题包的 `assets/` 下，用 `asset("文件名")` 引用 |
-| `preview.svg` | 主题管理页里的预览图 |
+| `preview.svg` | 示意图，第一次 `npm run pack` 后换成 `preview.png` |
 | `AGENTS.md` | 给 AI 编码工具看的约定 |
