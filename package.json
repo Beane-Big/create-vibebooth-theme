@@ -1,0 +1,22 @@
+{
+  "name": "create-vibebooth-theme",
+  "version": "0.1.0",
+  "description": "生成一个 Vibebooth 门户主题：颜色、背景、组件样式、玻璃效果和首页",
+  "type": "module",
+  "bin": {
+    "create-vibebooth-theme": "index.mjs"
+  },
+  "files": [
+    "index.mjs",
+    "lib",
+    "template"
+  ],
+  "scripts": {
+    "test": "node --test test/*.test.mjs"
+  },
+  "engines": {
+    "node": ">=20.11"
+  },
+  "license": "UNLICENSED",
+  "private": true
+}

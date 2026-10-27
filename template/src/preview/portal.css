@@ -1,0 +1,31 @@
+/* 本地预览用的门户样式，抄自平台仓库 portal/src/styles.css 里和主题有关的部分，平台改了要跟着改。 */
+* { box-sizing: border-box; }
+body { margin: 0; background: var(--bg); }
+.ant-layout { background: var(--bg); }
+.content { width: 100%; max-width: 1120px; margin: 0 auto; padding: 24px 16px 48px; }
+.topbar {
+  display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 10; height: 56px; padding: 0 16px;
+  background: var(--surface); box-shadow: var(--shadow); line-height: normal; color: var(--text);
+}
+.brand { font-weight: 600; font-size: 16px; color: var(--text); white-space: nowrap; }
+.app-tabbar { flex: 1; min-width: 0; display: flex; gap: 4px; align-items: center; }
+.preview-tab { padding: 6px 12px; border-radius: 6px; color: var(--text); }
+.preview-tab.active { background: var(--bg); color: var(--accent); }
+.ant-card { border: 0 !important; box-shadow: var(--shadow); }
+.ant-card-head { border-bottom: 0 !important; min-height: 48px; }
+.ant-card-head + .ant-card-body { padding-top: 4px; }
+.ant-input-outlined, .ant-input-affix-wrapper.ant-input-outlined { border-bottom-color: var(--input-bottom); }
+
+html.vb-has-bg body { background: var(--page-bg); background-attachment: fixed; }
+html.vb-has-bg .ant-layout { background: transparent !important; }
+html.vb-glass .ant-card,
+html.vb-glass .topbar,
+html.vb-glass .ant-dropdown-menu,
+html.vb-glass .ant-select-dropdown,
+html.vb-glass .ant-modal-content,
+html.vb-glass .ant-popover-inner,
+html.vb-glass .ant-message-notice-content {
+  -webkit-backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+  backdrop-filter: blur(var(--glass-blur)) saturate(180%);
+}
+html.vb-glass .ant-card, html.vb-glass .topbar { box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.35), var(--shadow); }

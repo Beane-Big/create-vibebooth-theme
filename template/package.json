@@ -1,0 +1,24 @@
+{
+  "name": "vibebooth-theme-__ID__",
+  "private": true,
+  "version": "0.0.0",
+  "type": "module",
+  "description": "__DESCRIPTION__",
+  "scripts": {
+    "dev": "vite",
+    "build": "tsc -b && vite build",
+    "pack": "node scripts/theme.mjs pack",
+    "install:local": "node scripts/theme.mjs install"
+  },
+  "devDependencies": {
+    "@ant-design/icons": "^5.6.1",
+    "@types/react": "^19.3.0",
+    "@types/react-dom": "^19.3.0",
+    "@vitejs/plugin-react": "^6.1.2",
+    "antd": "^5.29.3",
+    "react": "^19.3.1",
+    "react-dom": "^19.3.1",
+    "typescript": "^5.9.3",
+    "vite": "^8.3.5"
+  }
+}
