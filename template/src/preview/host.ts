@@ -7,6 +7,7 @@ import {
   Space, Spin, Tag, Tooltip, Typography, theme,
 } from "antd";
 import type { ThemeDefinition } from "../vibebooth";
+import AppIcon from "./AppIcon";
 
 export let registered: ThemeDefinition | null = null;
 
@@ -18,6 +19,7 @@ window.vibebooth = {
     Alert, Avatar, Badge, Button, Card, Checkbox, Col, Empty, Flex, Form, Grid, Input, Row, Segmented, Select,
     Space, Spin, Tag, Tooltip, Typography, theme,
   },
+  AppIcon,
   registerTheme(def) {
     registered = def;
   },

@@ -1,7 +1,7 @@
 // __NAME__：门户的主题。这里是一个能直接用的示例：渐变背景、玻璃效果的卡片和顶栏、
 // 调过圆角和字重的表单组件，以及一个玻璃方块的首页。按需要改，不需要的部分整段删掉就会用平台默认的样子。
 import "./theme.css";
-import { registerTheme } from "./platform";
+import { AppIcon, registerTheme } from "./platform";
 import type { HomeProps, ThemeDefinition } from "./vibebooth";
 
 // Ant Design 的参数，深浅色共用一份。可以调的组件和参数见 https://ant.design/docs/react/customize-theme-cn 。
@@ -28,6 +28,13 @@ registerTheme({
     dark: "radial-gradient(60% 50% at 15% 10%, #3b2f8f 0%, transparent 70%), radial-gradient(50% 50% at 90% 20%, #6b2450 0%, transparent 70%), radial-gradient(60% 60% at 60% 100%, #0f4a63 0%, transparent 70%), #101024",
   },
   glass: { blur: 24, opacity: 0.55 },
+  // 首页图标：浅色时是半透明的白底配主色图形，深色时是半透明的深底配浅紫图形，和玻璃效果一致。
+  icons: {
+    light: { bg: "rgba(255, 255, 255, 0.7)", fg: "#6b5cff" },
+    dark: { bg: "rgba(255, 255, 255, 0.12)", fg: "#cfc8ff" },
+  },
+  // 顶栏的平台字标换成主题的配色。
+  wordmark: { light: ["#6b5cff", "#c86bff", "#ff7aa8"], dark: ["#a196ff", "#e0a3ff", "#ffb3cf"] },
   Home,
 });
 
@@ -37,9 +44,7 @@ function Home({ apps }: HomeProps) {
     <div className="glass-home">
       {apps.map((app) => (
         <a key={app.id} className={app.healthy ? "glass-app" : "glass-app unhealthy"} title={app.description} {...app.link}>
-          <span className="glass-icon">
-            {app.icon ? <img src={app.icon} alt="" /> : (app.glyph ?? app.name.slice(0, 1))}
-          </span>
+          <AppIcon app={app} />
           <span className="glass-name">{app.healthy ? app.name : `${app.name}（不可用）`}</span>
         </a>
       ))}

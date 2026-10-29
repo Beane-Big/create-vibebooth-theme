@@ -1,9 +1,8 @@
 /* __NAME__ 的样式表，只在选用这个主题时加载。门户的顶层有 class skin-theme theme-__ID__，
-   能改的门户元素（.topbar 顶栏、.brand 平台名称、.app-tabbar 标签栏、.content 内容区）见主题规范。 */
+   能改的门户元素（.topbar 顶栏、.brand 平台字标、.app-icon 应用图标、.app-tabbar 标签栏、.content 内容区）见主题规范。 */
 
 /* 顶栏悬浮成圆角长条，和下面的内容一样宽。 */
 .theme-__ID__ .topbar { top: 12px; margin: 12px max(16px, (100% - 1088px) / 2) 0; border-radius: 20px; }
-.theme-__ID__ .brand { font-weight: 700; color: var(--accent); }
 .theme-__ID__ .app-tabbar .ant-tabs-tab { border-radius: 999px !important; }
 
 /* 首页：玻璃方块，一行的个数按屏幕宽度，手机上一行三个。 */
@@ -16,16 +15,12 @@
 }
 .glass-app:hover { transform: translateY(-3px); color: var(--text); }
 .glass-app.unhealthy { opacity: 0.55; }
-.glass-icon {
-  width: 56px; height: 56px; border-radius: 16px; overflow: hidden; display: flex; align-items: center; justify-content: center;
-  font-size: 26px; font-weight: 600; color: #fff; background: linear-gradient(150deg, #8f84ff, var(--accent));
-}
-.glass-icon img { width: 100%; height: 100%; object-fit: cover; }
+.glass-app .app-icon { width: 56px; height: 56px; border-radius: 16px; font-size: 26px; }
 .glass-name { max-width: 100%; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; font-weight: 600; }
 @media (max-width: 575px) {
   .theme-__ID__ .topbar { top: 8px; margin: 8px 16px 0; border-radius: 16px; }
   .glass-home { grid-template-columns: repeat(3, 1fr); gap: 12px; }
   .glass-app { padding: 16px 6px 12px; border-radius: 20px; }
-  .glass-icon { width: 46px; height: 46px; border-radius: 13px; font-size: 22px; }
+  .glass-app .app-icon { width: 46px; height: 46px; border-radius: 13px; font-size: 22px; }
   .glass-name { font-size: 12px; }
 }
