@@ -38,6 +38,20 @@ const demoApps: ThemeApp[] = [
 const pick = <T,>(v: { light?: T; dark?: T } | undefined, dark: boolean) => (dark ? v?.dark : v?.light);
 // 门户字标原来的渐变。
 const wordmark = ["#5f9bff", "#9a78ff", "#e978d8", "#ff8fa8"];
+// 主题没写 wordmark 时，门户的字标跟着主色：主色和色相往两边各偏 60 度的颜色组成渐变（同门户 components/Wordmark.tsx）。
+function fromPrimary(color: string) {
+  const hex = /^#([0-9a-f]{6})$/i.exec(color)?.[1];
+  if (!hex) return wordmark;
+  const [r, g, b] = [0, 2, 4].map((i) => parseInt(hex.slice(i, i + 2), 16) / 255);
+  const max = Math.max(r, g, b);
+  const min = Math.min(r, g, b);
+  const l = (max + min) / 2;
+  const d = max - min;
+  const s = d === 0 ? 0 : d / (1 - Math.abs(2 * l - 1));
+  const h = d === 0 ? 0 : max === r ? ((g - b) / d + 6) % 6 : max === g ? (b - r) / d + 2 : (r - g) / d + 4;
+  const pct = (v: number) => `${Math.round(v * 100)}%`;
+  return [-60, 0, 60].map((shift) => `hsl(${Math.round(h * 60 + shift + 360) % 360}, ${pct(s)}, ${pct(l)})`);
+}
 
 function Preview() {
   const [dark, setDark] = useState(matchMedia("(prefers-color-scheme: dark)").matches);
@@ -139,7 +153,7 @@ function CssVars({ dark }: { dark: boolean }) {
       "--float-shadow": p.floatShadow,
       "--page-bg": background || token.colorBgLayout,
       "--glass-blur": `${glass?.blur ?? 0}px`,
-      "--wordmark": `linear-gradient(90deg, ${(pick(def.wordmark, dark) ?? wordmark).join(", ")})`,
+      "--wordmark": `linear-gradient(90deg, ${(pick(def.wordmark, dark) ?? fromPrimary(token.colorPrimary)).join(", ")})`,
     };
     const root = document.documentElement;
     for (const [k, v] of Object.entries(vars)) root.style.setProperty(k, v);
