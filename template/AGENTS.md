@@ -10,9 +10,11 @@
   - 表单、按钮、卡片、文字：`antd.token`（全局字号、圆角、控件高度）和 `antd.components`（按组件调）。
   - 页面背景：`background`，CSS background 写法。
   - 玻璃效果：`glass`，卡片、顶栏、弹出层半透明并模糊背景。
-- 样式表 `src/theme.css` 只在选用这个主题时加载。每条规则都以 `.theme-__ID__` 开头，或者只用在主题自己的 class 上（比如首页的 `.glass-home`），不要写会影响其他主题的全局规则。门户里能改的元素只有 `.topbar`（顶栏）、`.brand`（平台名称）、`.app-tabbar`（标签栏）、`.content`（内容区），其他 class 门户随时会改。
+  - 首页图标的颜色：`icons`，`bg` 是底色（颜色或渐变），`fg` 是图形的颜色，深浅色各一份。平台把模块的 `icon.svg` 拆成底色和图形再上色，拆不开的图标照原样显示。
+  - 顶栏平台字标的颜色：`wordmark`，1 到 4 个颜色的渐变，深浅色各一份。
+- 样式表 `src/theme.css` 只在选用这个主题时加载。每条规则都以 `.theme-__ID__` 开头，或者只用在主题自己的 class 上（比如首页的 `.glass-home`），不要写会影响其他主题的全局规则。门户里能改的元素只有 `.topbar`（顶栏）、`.brand`（平台字标，是一张图片，颜色用 `wordmark` 改）、`.app-icon`（应用图标，能改大小、圆角、阴影）、`.app-tabbar`（标签栏）、`.content`（内容区），其他 class 门户随时会改。
 - 颜色用门户的 CSS 变量（`--accent`、`--text`、`--muted`（次要文字）、`--surface`（卡片底色）、`--bg`、`--border`、`--shadow`、`--radius`……，见规范），深浅色切换时自动跟着变；少写死颜色。
-- 首页组件 `Home` 只用 `HomeProps` 里给的数据。应用的链接原样展开 `{...app.link}` 到 `<a>` 上，不要自己拼网址或另写点击跳转；不可用的应用（`healthy` 为 false）要看得出来。
+- 首页组件 `Home` 只用 `HomeProps` 里给的数据。应用的链接原样展开 `{...app.link}` 到 `<a>` 上，不要自己拼网址或另写点击跳转；不可用的应用（`healthy` 为 false）要看得出来。图标用 `src/platform.ts` 导出的 `AppIcon`（`<AppIcon app={app} />`），不要自己用 `app.icon` 画，否则不会跟着 `icons` 上色。
 - React 和共享的 Ant Design 组件来自门户，不打进主题：构建时 `react`、`antd` 都指向门户的那一份。所以 `antd` 里只有 `src/vibebooth.d.ts` 的 `SharedAntd` 列出的组件，别的组件 import 进来是 undefined；需要时用共享组件拼，或者自己写。图标从 `@ant-design/icons` import，会打进主题。
 - 不加载远程脚本、样式或字体，也不请求平台以外的网址：门户里所有人都会运行这个主题。字体和图片放进 `public/assets/`。
 - 主题只改门户和它自带的页面（首页、用户、设置）。模块的页面在 iframe 里，主题改不到，不要尝试。

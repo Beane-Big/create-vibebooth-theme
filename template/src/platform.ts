@@ -6,6 +6,9 @@ const vb = window.vibebooth;
 // 门户共享的 Ant Design 组件，用法：const { Button, Card } = antd。没列出的组件不能用。
 export const antd = vb.antd;
 
+// 门户的应用图标组件，首页组件里用 <AppIcon app={app} /> 画图标，会按 registerTheme 里的 icons 上色。
+export const AppIcon = vb.AppIcon;
+
 // 主题包里的脚本加载时，当前 <script> 就是自己，从它的网址算出主题文件所在的目录；本地预览时是 public/。
 const base = (document.currentScript as HTMLScriptElement | null)?.src;
 

@@ -38,6 +38,11 @@ export type ThemeOverrides = {
   background?: PerMode<string>;
   // 玻璃效果：卡片、顶栏、弹出层半透明并模糊后面的背景。blur 是模糊半径（px，默认 20），opacity 是底色不透明度（默认 0.6）。
   glass?: boolean | { blur?: number; opacity?: number };
+  // 首页应用图标的颜色。bg 是底色，CSS background 写法（颜色或渐变），不写用应用自己的底色；fg 是图形的颜色，只能是颜色，不写是白色。
+  // 写了图标就按主题上色：模块的图形取自平台从 icon.svg 拆出的图形层，拆不开的图标照原样显示。
+  icons?: PerMode<{ bg?: string; fg?: string }>;
+  // 顶栏平台字标的颜色，1 到 4 个颜色从左到右渐变，投影和描边跟着中间的颜色。不写是原来的蓝紫粉渐变。
+  wordmark?: PerMode<string[]>;
 };
 
 // 首页上的一个应用，平台自带的应用（用户、设置）和模块统一成一种。
@@ -48,6 +53,9 @@ export type ThemeApp = {
   url: string;
   // 模块的图片图标网址（满底色的方块），没有时为空。
   icon?: string;
+  // 模块图标拆出来的图形（去掉底色的 SVG）网址和底色，图标拆不开时为空。一般不用自己处理，交给 AppIcon。
+  mask?: string;
+  color?: string;
   // 平台自带的应用的图标（Ant Design 图标元素）。
   glyph?: React.ReactNode;
   // 平台自带的应用建议的渐变底色，从左上到右下。
@@ -81,6 +89,8 @@ export type Vibebooth = {
   React: typeof React;
   jsxRuntime: typeof jsxRuntime;
   antd: SharedAntd;
+  // 门户的应用图标，按主题的 icons 上色：<AppIcon app={app} />。外层是 class 为 app-icon 的元素，大小、圆角在样式表里改。
+  AppIcon: React.ComponentType<{ app: ThemeApp }>;
   registerTheme: (def: ThemeDefinition) => void;
 };
 
