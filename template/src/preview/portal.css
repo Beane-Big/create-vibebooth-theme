@@ -7,6 +7,8 @@ body { margin: 0; background: var(--bg); }
   display: flex; align-items: center; gap: 12px; position: sticky; top: 0; z-index: 10; height: 56px; padding: 0 16px;
   background: var(--surface); box-shadow: var(--shadow); line-height: normal; color: var(--text);
 }
+/* 主题给顶栏画的背景（TopbarBackground）：铺满顶栏，在字标和标签后面。 */
+.topbar-bg { position: absolute; inset: 0; z-index: -1; border-radius: inherit; overflow: hidden; pointer-events: none; }
 .brand { font-weight: 600; font-size: 16px; color: var(--text); white-space: nowrap; }
 /* 门户的字标是一张图片，预览里用渐变文字近似主题的 wordmark 颜色。 */
 .brand.preview-wordmark { font-weight: 800; font-size: 22px; color: transparent; background: var(--wordmark); -webkit-background-clip: text; background-clip: text; }
