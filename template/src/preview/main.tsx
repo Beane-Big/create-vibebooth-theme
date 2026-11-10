@@ -75,6 +75,11 @@ function Preview() {
         <ThemedIcons.Provider value={!!pick(def.icons, dark)}>
           <div className="ant-layout skin-theme theme-__ID__" style={{ minHeight: "100vh" }}>
             <header className="topbar">
+              {def.TopbarBackground && (
+                <div className="topbar-bg">
+                  <def.TopbarBackground dark={dark} wallpaper={wallpaper} />
+                </div>
+              )}
               <span className="brand preview-wordmark">Vibebooth</span>
               <span className="app-tabbar">
                 <span className="preview-tab active">

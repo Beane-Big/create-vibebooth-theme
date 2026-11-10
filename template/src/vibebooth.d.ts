@@ -78,9 +78,19 @@ export type HomeProps = {
   wallpaper?: string;
 };
 
+// 顶栏背景组件收到的参数。
+export type TopbarProps = {
+  dark: boolean;
+  // 正在用的平台壁纸的网址，和 HomeProps.wallpaper 一样。
+  wallpaper?: string;
+};
+
 export type ThemeDefinition = ThemeOverrides & {
   // 替换首页的应用列表，不写就用经典皮肤的首页。
   Home?: React.ComponentType<HomeProps>;
+  // 顶栏的背景：画在顶栏里面、字标和标签的后面，铺满顶栏，跟着顶栏的圆角裁切，不接收点击。
+  // 顶栏的内容和布局还是门户的。用它时一般要在样式表里把 .topbar 自己的底色去掉。
+  TopbarBackground?: React.ComponentType<TopbarProps>;
 };
 
 // 门户共享给主题的 Ant Design 组件，只有这些；要用别的组件或图标库，打包进主题自己。
