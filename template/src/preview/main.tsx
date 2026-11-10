@@ -35,7 +35,7 @@ const demoApps: ThemeApp[] = [
   { id: "bishun", name: "笔顺练习", description: "图标有好几种颜色，拆不开", url: "#", icon: multicolor, healthy: true, builtin: false, link: { href: "#", onClick: noop } },
 ];
 
-// 演示用的平台壁纸：主题写了 wallpaper: true 时，预览页能在“壁纸”和“主题背景”之间切换。真正的壁纸由平台提供。
+// 演示用的平台壁纸：预览页能在“壁纸”和“主题背景”之间切换，看选了平台壁纸时主题的样子。真正的壁纸由平台提供。
 const demoWallpaper =
   "data:image/svg+xml," +
   encodeURIComponent(
@@ -65,8 +65,8 @@ function fromPrimary(color: string) {
 
 function Preview() {
   const [dark, setDark] = useState(matchMedia("(prefers-color-scheme: dark)").matches);
-  const [useWallpaper, setUseWallpaper] = useState(!!def.wallpaper);
-  const wallpaper = def.wallpaper && useWallpaper ? demoWallpaper : "";
+  const [useWallpaper, setUseWallpaper] = useState(false);
+  const wallpaper = useWallpaper ? demoWallpaper : "";
   return (
     <ConfigProvider locale={zhCN} theme={themeConfig(dark, def)} button={{ autoInsertSpace: false }}>
       <CssVars dark={dark} wallpaper={wallpaper} />
@@ -95,16 +95,14 @@ function Preview() {
                   { value: "dark", label: "深色" },
                 ]}
               />
-              {def.wallpaper && (
-                <Segmented
-                  value={useWallpaper ? "wallpaper" : "theme"}
-                  onChange={(v) => setUseWallpaper(v === "wallpaper")}
-                  options={[
-                    { value: "wallpaper", label: "壁纸" },
-                    { value: "theme", label: "主题背景" },
-                  ]}
-                />
-              )}
+              <Segmented
+                value={useWallpaper ? "wallpaper" : "theme"}
+                onChange={(v) => setUseWallpaper(v === "wallpaper")}
+                options={[
+                  { value: "wallpaper", label: "壁纸" },
+                  { value: "theme", label: "主题背景" },
+                ]}
+              />
             </header>
             <div className="content">
               {def.Home ? <def.Home apps={demoApps} dark={dark} user={{ displayName: "演示用户" }} wallpaper={wallpaper} /> : <Alert type="info" showIcon message="这个主题没有替换首页，门户里会显示经典皮肤的应用卡片。" />}
