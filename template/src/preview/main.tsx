@@ -35,6 +35,16 @@ const demoApps: ThemeApp[] = [
   { id: "bishun", name: "笔顺练习", description: "图标有好几种颜色，拆不开", url: "#", icon: multicolor, healthy: true, builtin: false, link: { href: "#", onClick: noop } },
 ];
 
+// 演示用的平台壁纸：主题写了 wallpaper: true 时，预览页能在“壁纸”和“主题背景”之间切换。真正的壁纸由平台提供。
+const demoWallpaper =
+  "data:image/svg+xml," +
+  encodeURIComponent(
+    '<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 160 100">' +
+      '<defs><linearGradient id="s" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="#2b5876"/><stop offset="0.6" stop-color="#f6a37b"/><stop offset="1" stop-color="#f9d29d"/></linearGradient></defs>' +
+      '<rect width="160" height="100" fill="url(#s)"/><circle cx="112" cy="54" r="12" fill="#fff3c4"/>' +
+      '<path d="M0 74 Q40 56 74 70 T160 66 V100 H0z" fill="#3e5c76"/><path d="M0 88 Q52 74 100 86 T160 84 V100 H0z" fill="#1d2d44"/></svg>',
+  );
+
 const pick = <T,>(v: { light?: T; dark?: T } | undefined, dark: boolean) => (dark ? v?.dark : v?.light);
 // 门户字标原来的渐变。
 const wordmark = ["#5f9bff", "#9a78ff", "#e978d8", "#ff8fa8"];
@@ -55,9 +65,11 @@ function fromPrimary(color: string) {
 
 function Preview() {
   const [dark, setDark] = useState(matchMedia("(prefers-color-scheme: dark)").matches);
+  const [useWallpaper, setUseWallpaper] = useState(!!def.wallpaper);
+  const wallpaper = def.wallpaper && useWallpaper ? demoWallpaper : "";
   return (
     <ConfigProvider locale={zhCN} theme={themeConfig(dark, def)} button={{ autoInsertSpace: false }}>
-      <CssVars dark={dark} />
+      <CssVars dark={dark} wallpaper={wallpaper} />
       {/* 和门户一样包一层 App：正文字体、链接颜色都由它设置。 */}
       <AntApp>
         <ThemedIcons.Provider value={!!pick(def.icons, dark)}>
@@ -78,9 +90,19 @@ function Preview() {
                   { value: "dark", label: "深色" },
                 ]}
               />
+              {def.wallpaper && (
+                <Segmented
+                  value={useWallpaper ? "wallpaper" : "theme"}
+                  onChange={(v) => setUseWallpaper(v === "wallpaper")}
+                  options={[
+                    { value: "wallpaper", label: "壁纸" },
+                    { value: "theme", label: "主题背景" },
+                  ]}
+                />
+              )}
             </header>
             <div className="content">
-              {def.Home ? <def.Home apps={demoApps} dark={dark} user={{ displayName: "演示用户" }} /> : <Alert type="info" showIcon message="这个主题没有替换首页，门户里会显示经典皮肤的应用卡片。" />}
+              {def.Home ? <def.Home apps={demoApps} dark={dark} user={{ displayName: "演示用户" }} wallpaper={wallpaper} /> : <Alert type="info" showIcon message="这个主题没有替换首页，门户里会显示经典皮肤的应用卡片。" />}
               <Components />
             </div>
           </div>
@@ -132,11 +154,11 @@ function Components() {
   );
 }
 
-// 和门户一样把颜色写成 CSS 变量，主题的样式表和预览页的门户样式都用它们。
-function CssVars({ dark }: { dark: boolean }) {
+// 和门户一样把颜色写成 CSS 变量，主题的样式表和预览页的门户样式都用它们。选了壁纸时，壁纸代替主题的背景。
+function CssVars({ dark, wallpaper }: { dark: boolean; wallpaper: string }) {
   const { token } = theme.useToken();
   const p = paletteFor(dark, def);
-  const background = backgroundFor(dark, def);
+  const background = wallpaper ? `url("${wallpaper}") center / cover no-repeat, ${token.colorBgLayout}` : backgroundFor(dark, def);
   const glass = glassOf(def);
   useEffect(() => {
     const vars: Record<string, string> = {

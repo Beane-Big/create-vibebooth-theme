@@ -43,6 +43,9 @@ export type ThemeOverrides = {
   icons?: PerMode<{ bg?: string; fg?: string }>;
   // 顶栏平台字标的颜色，1 到 4 个颜色从左到右渐变，投影和描边跟着中间的颜色。不写时跟着主题的主色。
   wordmark?: PerMode<string[]>;
+  // 使用平台壁纸：写成 true 时，有人在“主题”应用里选了壁纸（或者平台设了默认壁纸），页面背景就换成壁纸，
+  // 铺满整个屏幕；没选时用上面的 background。壁纸由平台保存（管理员上传的图片、必应每日壁纸），不放进主题包。
+  wallpaper?: boolean;
 };
 
 // 首页上的一个应用，平台自带的应用（用户、设置）和模块统一成一种。
@@ -70,6 +73,9 @@ export type HomeProps = {
   apps: ThemeApp[];
   dark: boolean;
   user: { displayName: string };
+  // 正在用的平台壁纸的网址：写了 wallpaper: true、又选了壁纸时才有，否则为空。
+  // 页面背景已经换成了它；首页要自己再画一份壁纸时（比如给玻璃折射）用。
+  wallpaper?: string;
 };
 
 export type ThemeDefinition = ThemeOverrides & {
